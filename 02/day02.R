@@ -26,7 +26,7 @@ dt[, letter_count := as.numeric(str_count(get('pw'), pattern = get('letter')))]
 dt[,valid1 := 0]
 dt[(get('letter_count') >= get('min')) & (get('letter_count') <= get('max')), valid1 := 1]
 
-head(dt)
+head(dt, 20)
 sum(dt$valid1)
 
 # Part 2
