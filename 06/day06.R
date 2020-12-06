@@ -2,7 +2,6 @@ rm(list = ls())
 setwd('/Users/danielpringle/Code/aoc2020/06')
 library(tidyverse)
 library(data.table)
-library(stringi)
 
 r <- read_file('input06.txt')
 rs <- unlist(strsplit(r, "\n\n"))
@@ -22,13 +21,20 @@ sum(d$n_unq_ch)
 r <- read_file('input06.txt')
 rs <- unlist(strsplit(r, "\n\n"))
 rs <- gsub("\n"," ", rs)
-rs <- strsplit(rs, " ")
-rs <- lapply(rs, FUN=function(X) data.table(X))
-rs <- lapply(rs, FUN=function(X) `colnames<-`(X, "raw"))
+d <- data.table(grp = rs)
+d[,nrow := 1+str_count(get('grp')," ")]
+d[,grp1 := gsub(" ","", get('grp'))]
 
+# Again, this is rough. Would like to know how to do in a 1-line dt command
+# This doesn't work:
+# > d[,unq := sum(table(str_split(get('grp1'),""))==get('nrow'))]
+# Error in table(str_split(get("grp1"), "")) : 
+#     all arguments must have the same length
 
-as.character(rs[[1]][1])
+for (i in 1:nrow(d)) {
+    N = d$nrow[i]
+    d$unq[i] <- sum(table(str_split(d[i,grp1],""))==N)
+}
 
-'w' %in% strsplit(as.character(rs[[1]][1]), "", fixed = TRUE)[1]
-
-'w' %in% strsplit(as.character(rs[[1]][1]), "", fixed = TRUE)[[1]]
+head(d)
+sum(d[,unq])
