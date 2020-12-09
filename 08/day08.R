@@ -4,8 +4,8 @@ library(tidyverse)
 library(data.table)
 library(igraph)
 
-r <- read_file('input08test.txt')
-#r <- read_file('input08.txt')
+#r <- read_file('input08test.txt')
+r <- read_file('input08.txt')
 
 d <- data.table(raw = gsub("\n"," ", unlist(strsplit(r, "\n"))))
 d[, ID := .I]
@@ -62,69 +62,69 @@ change_act <- function(outstep, dt = d0) {
 # d
 # all.equal(d,d0)
 
-# # Part 1 Loop----
-# # Loop following instructions
-# 
-# tot = 0
-# max = 0
-# row = 1
-# step = 0
-# max_row = nrow(d)
-# 
-# while (max <= 1 & row <= max_row){
-# 
-#   # Values at start of iteration
-#   # row_in is for reporting
-#   row_in = row
-#   step = step + 1
-#   tot = tot + add(d,row)
-#   jmp = jump(d,row)
-#   row = row + jmp
-#   row_out = row
-# 
-#   move = data.table(step = step,
-#                     row_in = row_in,
-#                     jmp = jmp,
-#                     row_out = row_out,
-#                     tot = tot)
-#   ifelse(step == 1,
-#          moves <- move,
-#          moves <- rbind(moves, move)
-#          )
-# 
-#   # Values checked in whlie condition, next iteration
-#   d[row, n_call := 1 + get("n_call")]
-#   max = max(d[,n_call])
-#   row = row
-# 
-# }
-# d
-# moves
-# answer = max(moves$tot) %>% print()
+# Part 1 Loop----
+# Loop following instructions
+
+tot = 0
+max = 0
+row = 1
+step = 0
+max_row = nrow(d)
+
+while (max <= 1 & row <= max_row){
+
+  # Values at start of iteration
+  # row_in is for reporting
+  row_in = row
+  step = step + 1
+  tot = tot + add(d,row)
+  jmp = jump(d,row)
+  row = row + jmp
+  row_out = row
+
+  move = data.table(step = step,
+                    row_in = row_in,
+                    jmp = jmp,
+                    row_out = row_out,
+                    tot = tot)
+  ifelse(step == 1,
+         moves <- move,
+         moves <- rbind(moves, move)
+         )
+
+  # Values checked in whlie condition, next iteration
+  d[row, n_call := 1 + get("n_call")]
+  max = max(d[,n_call])
+  row = row
+
+}
+d
+moves
+answer = max(moves$tot) %>% print()
 
 
 # Part 2 Loop----
 
+rows_to_swap <- d0[act %in% c('nop', 'jmp') & val != 0, ID]
+
+d0
 outstep = 0
 complete = 0
+max_row = nrow(d)
 
-while (complete == 0) {
+while (complete == 0 | outstep < 10) {
   
   print(paste0('outer step = ', outstep))
-  d <- change_act(outstep, d0)
   
   # Run inner loop with no changes, and then make successive changes until complete == 1
   tot = 0
   max = 0
   row = 1
   step = 0
-  max_row = nrow(d)
-  complete = complete
-  moves <- NULL
-  
+
   while (max <= 1 & complete == 0){
     
-    print(paste0('step(inner) = ', step))
+    #print(paste0('step(inner) = ', step))
     
     # Values at start of iteration
     # row_in is for reporting
@@ -148,23 +148,25 @@ while (complete == 0) {
     # Values checked in while condition, next iteration
     row = row
     
-    if(row >= max_row) {
-      complete == 1
+    if(row > max_row) {
+      complete <-  1
     } else {
-      
       d[row, n_call := 1 + get("n_call")]
-      max = max(d[,n_call])  
-      
+      max <-  max(d[,n_call])  
     }
     
-    outstep = outstep + 1
   }
+  
+  outstep = outstep + 1
+  row_swap <- rows_to_swap[outstep] 
+  print(paste0('row_swap = ', row_swap))
+  d <- change_act(row_swap, d0)
 }
-
 
 d0
 d
 moves
+answer = max(moves$tot) %>% print()
 
 
 
