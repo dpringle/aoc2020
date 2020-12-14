@@ -31,19 +31,26 @@ dec_bit36 <- function(dec) {
   }
 
 
+bit36
+bin_vec
 powers.of.two <- 2^(0:(n - 1))
-toID <- function(vec) { as.integer(vec %*% powers.of.two) }
+toID <- function(bin_vec) { as.integer(bin_vec %*% powers.of.two) }
 
-fff<-function(x) sum(2^(which(rev(x))-1))
-x = mask
-m <- gsub('X', '0',mask)
+which(rev(bin_vec))
+
+fff <-function(x) sum(2^(which(rev(x))-1))
+fff(bin_vec)
+bin_vec
+
 
 apply_mask <- function(mask, bit36, n = 36) {
   stopifnot(nchar(mask) == n  & nchar(bit36) == n)
-  mask_sp = strsplit(gsub("X","0", mask), "")
+  #mask_sp = strsplit(gsub("X","0", mask), "")
   bit36_sp = strsplit(bit36, "")
-  out <- mapply(function(x,y) paste(as.numeric(as.numeric(x) | as.numeric(y)), collapse = ""), mask_sp, bit36_sp)
   
+  
+  ## FIX THIS FOR X VALUES
+  out <- mapply(masking(x,y) function(x,y) paste(as.numeric(as.numeric(x) | as.numeric(y)), collapse = ""), mask_sp, bit36_sp)
   
   return(out)
 }
@@ -53,15 +60,26 @@ memory <- data.table(loc = 1:36, value = "")
 
 
 for (i in 1:length(rs)){
- 
+  # extract list element : mask and instructions
   rs_tmp <- copy(rs[[i]])
   mask <- rs_tmp[field == 'mask', value]
   bits <- rs_tmp[!field == 'mask', c('mem_loc', 'value')]
   print(paste0(" i = ", i, " and mask is: ", mask))
-  
+
+  # loop over instructions, 
+  # - convert dec to bit36
+  # - apply mask to bit36
+  # - convert back to dec
+  # - assign to mem location
   for (i in 1:length(bits)) {
+
+    ## FIX THIS FOR 
+        
+    loc <- bits[,'mem_loc']
+    dec <- bits[,'value']
+    bit36 <- dec_bit36(dec)
     
-    mem_loc
+    
     
     }
 
