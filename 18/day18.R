@@ -1,5 +1,5 @@
 rm(list = ls()); gc()
-setwd('/Users/danielpringle/Code/aoc2020/18')
+setwd('/Users/daniel/Code/aoc2020/18')
 library(tidyverse)
 library(data.table)
 
@@ -80,6 +80,3 @@ print(paste0("total=",total))
 # Just replace x+y with (x+y) everywhere
 # Using a gsub
 
-s <- "3+4*6"
-
-grep(D,s)
