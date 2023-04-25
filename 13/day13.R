@@ -1,5 +1,5 @@
 rm(list = ls()); gc()
-setwd('/Users/danielpringle/Code/aoc2020/13')
+setwd('/Users/daniel/Code/aoc2020/13')
 library(tidyverse)
 library(data.table)
 

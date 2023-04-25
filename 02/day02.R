@@ -1,5 +1,5 @@
 rm(list = ls())
-setwd('/Users/danielpringle/Code/aoc2020/02')
+setwd('/Users/daniel/Code/aoc2020/02')
 library(tidyverse)
 
 dt <- read.delim('input02.txt', header = F)
